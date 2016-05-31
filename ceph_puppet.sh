@@ -44,7 +44,7 @@ function format_disk_to_puppet(){
     echo ${prefix}osd_device_dict":"
     if [ -z $disks_list ]; then
         mkdir -p $system_dir
-        echo "  \"/var/ceph\"":"\"\""
+        echo "  \"$system_dir\"":"\"\""
     else
         for item in ${disks_list//:/ };
         do
