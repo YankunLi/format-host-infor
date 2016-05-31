@@ -7,6 +7,7 @@ partitions_list=''
 disks_list=''
 service_type=''
 device_type=''
+system_dir='/var/ceph'
 
 function usage(){
     cat <<- EOF
@@ -40,10 +41,16 @@ function enable_service(){
 }
 
 function format_disk_to_puppet(){
-    for item in ${disks_list//:/ };
-    do
-        echo "  \"/dev/$item\"":"\"\""
-    done 
+    echo ${prefix}osd_device_dict":"
+    if [ -z $disks_list ]; then
+        mkdir -p $system_dir
+        echo "  \"/var/ceph\"":"\"\""
+    else
+        for item in ${disks_list//:/ };
+        do
+            echo "  \"/dev/$item\"":"\"\""
+        done
+    fi 
 }
 
 function main(){
@@ -53,7 +60,6 @@ function main(){
         enable_service
         get_raw_disk
         echo ${prefix}disk_type": $device_type"
-        echo ${prefix}osd_device_dict":"
         format_disk_to_puppet
     fi
     exit 0
